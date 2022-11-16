@@ -120,7 +120,7 @@
 
   (footprint "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (layer "F.Cu")
     (tedit 5AA4B285) (tstamp 2b50858e-678c-46d6-a70e-1e175df08d96)
-    (at 181 118)
+    (at 235.5 105)
     (descr "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf")
     (tags "LED RGB NeoPixel")
     (property "Sheetfile" "Projet_Final_GI_Equipe2.kicad_sch")
@@ -215,7 +215,7 @@
 
   (footprint "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (layer "F.Cu")
     (tedit 5AA4B285) (tstamp 2ed370fa-93a3-4d09-aafa-1435208be822)
-    (at 179 88)
+    (at 246.25 86.25)
     (descr "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf")
     (tags "LED RGB NeoPixel")
     (property "Sheetfile" "Projet_Final_GI_Equipe2.kicad_sch")
@@ -799,7 +799,7 @@
 
   (footprint "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (layer "F.Cu")
     (tedit 5AA4B285) (tstamp 72540010-6eeb-41f8-8225-c198bd836b5d)
-    (at 117 88)
+    (at 218.25 104.75)
     (descr "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf")
     (tags "LED RGB NeoPixel")
     (property "Sheetfile" "Projet_Final_GI_Equipe2.kicad_sch")
@@ -1126,7 +1126,7 @@
 
   (footprint "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (layer "F.Cu")
     (tedit 5AA4B285) (tstamp a998a607-0ad5-4815-8478-82c1f95c8343)
-    (at 186 99)
+    (at 244 105)
     (descr "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf")
     (tags "LED RGB NeoPixel")
     (property "Sheetfile" "Projet_Final_GI_Equipe2.kicad_sch")
@@ -1221,7 +1221,7 @@
 
   (footprint "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (layer "F.Cu")
     (tedit 5AA4B285) (tstamp b1789f61-4051-4c9f-84ea-b91966c61f41)
-    (at 113 116)
+    (at 235.75 86)
     (descr "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf")
     (tags "LED RGB NeoPixel")
     (property "Sheetfile" "Projet_Final_GI_Equipe2.kicad_sch")
@@ -1316,7 +1316,7 @@
 
   (footprint "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (layer "F.Cu")
     (tedit 5AA4B285) (tstamp c010e000-70f5-4726-a163-90c724811051)
-    (at 109 96)
+    (at 225.25 86.5)
     (descr "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf")
     (tags "LED RGB NeoPixel")
     (property "Sheetfile" "Projet_Final_GI_Equipe2.kicad_sch")
@@ -1420,7 +1420,7 @@
 
   (footprint "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (layer "F.Cu")
     (tedit 5AA4B285) (tstamp d1d956c5-ac66-4845-aefc-a330d04bc6ef)
-    (at 186 108)
+    (at 227.25 104.75)
     (descr "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf")
     (tags "LED RGB NeoPixel")
     (property "Sheetfile" "Projet_Final_GI_Equipe2.kicad_sch")
@@ -1665,7 +1665,7 @@
 
   (footprint "LED_SMD:LED_WS2812B_PLCC4_5.0x5.0mm_P3.2mm" (layer "F.Cu")
     (tedit 5AA4B285) (tstamp f64bbce5-7e9f-48d4-ac37-a30cff321fc8)
-    (at 109 105)
+    (at 215.5 86.25)
     (descr "https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf")
     (tags "LED RGB NeoPixel")
     (property "Sheetfile" "Projet_Final_GI_Equipe2.kicad_sch")
@@ -1716,17 +1716,23 @@
     )
   )
 
-  (gr_rect (start 98 53) (end 198 153) (layer "Edge.Cuts") (width 0.1) (fill none) (tstamp a468c054-ab2a-4f77-855a-061c18f5bfe7))
-  (gr_poly
-    (pts
-      (xy 197 152)
-      (xy 176 152)
-      (xy 176 121)
-      (xy 118 121)
-      (xy 118 152)
-      (xy 98 152)
-      (xy 98 53)
-      (xy 197 53)
-    ) (layer "Edge.Cuts") (width 0.1) (fill none) (tstamp c8bea620-a18a-4f3d-bbd8-9ca2d58d0b45))
+  (gr_line (start 175.75 152) (end 176.5 152) (layer "Edge.Cuts") (width 0.1) (tstamp 0e2359c8-a815-41a5-8eac-ac0a8f662117))
+  (gr_line (start 200.244796 147.744796) (end 200.5 58.389087) (layer "Edge.Cuts") (width 0.1) (tstamp 1c32bae8-0cc7-49bb-b6bd-ef3aea7e18f6))
+  (gr_line (start 195 52.889087) (end 101.25 53) (layer "Edge.Cuts") (width 0.1) (tstamp 212145bc-5fc7-4369-81c9-d114646219a3))
+  (gr_line (start 95.75 147.75) (end 95.75 58.5) (layer "Edge.Cuts") (width 0.1) (tstamp 218d89ee-30de-4f4d-85a9-a8ed6cef3d04))
+  (gr_arc (start 200.244796 147.744796) (mid 199 150.75) (end 195.994796 151.994796) (layer "Edge.Cuts") (width 0.1) (tstamp 2af15a6f-a1a6-45cc-a4f8-ea32f06cb4f0))
+  (gr_line (start 176.5 152) (end 175.75 152) (layer "Edge.Cuts") (width 0.1) (tstamp 34cedb37-34a2-465d-b4c7-098bb355b22e))
+  (gr_line (start 120.75 152) (end 118.75 152) (layer "Edge.Cuts") (width 0.1) (tstamp 78e33f92-d11d-4886-b3b0-54a3ca8f13bc))
+  (gr_line (start 100 152) (end 118.75 152) (layer "Edge.Cuts") (width 0.1) (tstamp 7a118300-af56-41e1-8709-844afcab627c))
+  (gr_arc (start 168.75 121.5) (mid 171.755204 122.744796) (end 173 125.75) (layer "Edge.Cuts") (width 0.1) (tstamp 7e48c418-e98c-4afd-9bde-32b4028370fd))
+  (gr_line (start 122.505204 125.755204) (end 120.75 152) (layer "Edge.Cuts") (width 0.1) (tstamp bffdef43-bf74-4a08-853d-24c39f275b72))
+  (gr_line (start 126.755204 121.505204) (end 168.75 121.5) (layer "Edge.Cuts") (width 0.1) (tstamp cbae8d17-875c-444e-9d16-ebc442ce1850))
+  (gr_arc (start 95.75 58.5) (mid 97.360913 54.610913) (end 101.25 53) (layer "Edge.Cuts") (width 0.1) (tstamp ce10cb53-6a7f-445e-9a7a-ed099f468449))
+  (gr_arc (start 122.505204 125.755204) (mid 123.75 122.75) (end 126.755204 121.505204) (layer "Edge.Cuts") (width 0.1) (tstamp d12d3f87-1c0c-455f-bfbc-280d8c7766a2))
+  (gr_line (start 195.994796 151.994796) (end 176.5 152) (layer "Edge.Cuts") (width 0.1) (tstamp de7f0a98-d60a-43fd-bbf6-093d52990091))
+  (gr_arc (start 100 152) (mid 96.994796 150.755204) (end 95.75 147.75) (layer "Edge.Cuts") (width 0.1) (tstamp e54260aa-bab0-4b40-916d-23df0532b2d7))
+  (gr_arc (start 195 52.889087) (mid 198.889087 54.5) (end 200.5 58.389087) (layer "Edge.Cuts") (width 0.1) (tstamp ea6e25f9-c1f7-44fe-a47f-e405ed347e4d))
+  (gr_line (start 173 125.75) (end 175.75 152) (layer "Edge.Cuts") (width 0.1) (tstamp ec7ba6e9-706f-48bc-9bf3-0aa8a7296a91))
+  (gr_line (start 118.75 152) (end 120.75 152) (layer "Edge.Cuts") (width 0.1) (tstamp feb625c2-0cf4-4af6-9ec1-da7c82d030f9))
 
 )
