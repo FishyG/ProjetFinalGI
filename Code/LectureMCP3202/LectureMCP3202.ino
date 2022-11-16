@@ -76,21 +76,50 @@ void loop()
   Serial.println("");*/
 
   switch (joystick_0x / 1400) {
-  case 0:
-    Serial.println("Going Backward");
+case 0:
+    Serial.println("Entering the Left loop");
+    while ( joystick_0x / 1400 == 0)
+    {
+      joystick_0x = Read3202(0, CS_3202_0);
+      Serial.println("Going Left (looping)");
+      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+      //delay(100);                       // wait for a second
+      client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":135,\"radian\":2.3561944902},\"force\":50}");
+      //{"angle":{"degree":180,"radian":3.1415926536},"force":50}
+      client.publish("zbos/motion/event", "true");
+      digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage HIGH
+      delay(100);
+    }
+    Serial.println("Stop Going Left");
     digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-    delay(100);                       // wait for a second
-    digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-    client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":180},\"force\":10}");
-    delay(3000);
+    //delay(100);                       // wait for a second
+    client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":135,\"radian\":2.3561944902},\"force\":0}");
+    
+    client.publish("zbos/motion/event", "true");
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage HIGH
+    delay(100);
     break;
   case 2:
-    Serial.println("Going Forward");
+    Serial.println("Entering the Right loop");
+    while ( joystick_0x / 1400 == 2)
+    {
+      joystick_0x = Read3202(0, CS_3202_0);
+      Serial.println("Going Right (looping)");
+      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+      //delay(100);                       // wait for a second
+      client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":45,\"radian\":0.7853981634},\"force\":50}");
+      //{"angle":{"degree":360,"radian":6.2831853072},"force":50}
+      client.publish("zbos/motion/event", "true");
+      digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage HIGH
+      delay(100);
+    }
+    Serial.println("Stop Going Right");
     digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-    delay(100);                       // wait for a second
-    digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-    client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":0},\"force\":10}");
-    delay(3000);
+    //delay(100);                       // wait for a second
+    client.publish("zbos/motion/control/movement", "{\"angle\": {\"degree\": 90,\"radian\": 1.5707963268},\"force\": 0}");
+    client.publish("zbos/motion/event", "true");
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage HIGH
+    delay(100);
     break;
   default:
     // statements (do nada)
@@ -99,40 +128,129 @@ void loop()
 
   switch (joystick_0y / 1400) {
   case 0:
-    Serial.println("Stop");
+    Serial.println("Entering the Backward loop");
+    while ( joystick_0y / 1400 == 0)
+    {
+      joystick_0y = Read3202(1, CS_3202_0);
+      Serial.println("Going Backward (looping)");
+      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+      delay(100);                       // wait for a second
+      client.publish("zbos/motion/control/movement", "{\"angle\":{\"radian\":4.613555656437402,\"degree\":264.33726766257115},\"force\":100}");
+      client.publish("zbos/motion/event", "true");
+      digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage HIGH
+      delay(100);
+    }
+    Serial.println("Stop Going Backward");
     digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
     delay(100);                       // wait for a second
-    digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-    client.publish("zbos/motion/animation/stop", "");
-    delay(3000);
+    client.publish("zbos/motion/control/movement", "{\"angle\": {\"degree\": 270,\"radian\": 4.71239},\"force\": 0}");
     
+    client.publish("zbos/motion/event", "true");
+    
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage HIGH
+    delay(100);
+    break;
+    break;
+  case 2:
+    Serial.println("Entering the Forward loop");
+    while ( joystick_0y / 1400 == 2)
+    {
+      joystick_0y = Read3202(1, CS_3202_0);
+      Serial.println("Going Forward (looping)");
+      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+      delay(100);                       // wait for a second
+      client.publish("zbos/motion/control/movement", "{\"angle\": {\"degree\": 90,\"radian\": 1.5707963268},\"force\": 100}");
+      client.publish("zbos/motion/event", "true");
+      digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage HIGH
+      delay(100);
+    }
+    Serial.println("Stop Going Forward");
+    digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+    delay(100);                       // wait for a second
+    client.publish("zbos/motion/control/movement", "{\"angle\": {\"degree\": 90,\"radian\": 1.5707963268},\"force\": 0}");
+    client.publish("zbos/motion/event", "true");
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage HIGH
+    delay(100);
+    break;
+  default:
+    // statements (do nada)
+    break;
+  }
+
+  switch (joystick_1x / 1400) {
+  case 0:
     Serial.println("Going Left");
     digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
     delay(100);                       // wait for a second
     digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-    client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":90},\"force\":10}");
+    //client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":180},\"force\":10}");
     delay(3000);
     break;
   case 2:
-    Serial.println("Stop");
-    digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-    delay(100);                       // wait for a second
-    digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-    client.publish("zbos/motion/animation/stop", "");
-    delay(3000);
-    
     Serial.println("Going Right");
     digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
     delay(100);                       // wait for a second
     digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-    client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":270},\"force\":10}");
+    //client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":0},\"force\":10}");
     delay(3000);
     break;
   default:
     // statements (do nada)
     break;
   }
-  delay(1000);
+
+  switch (joystick_1y / 1400) {
+  case 0:
+    Serial.println("Going Backward");
+    digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+    delay(100);                       // wait for a second
+    digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
+    //client.publish("zbos/motion/control/movement", "{\"angle\":{\"degree\":90},\"force\":10}");
+    delay(3000);
+    break;
+  case 2:
+    Serial.println("Entering the Forward loop");
+    while ( (Read3202(1, CS_3202_0) / 1400 == 2))
+    {
+      Serial.println("Going Forward (looping)");
+      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+      delay(10);                       // wait for a second
+      client.publish("zbos/motion/control/movement", "{\"angle\": {\"degree\": 90,\"radian\": 1.5707963268},\"force\": 100}");
+      digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+      delay(100);
+    }
+    Serial.println("Stop Going Forward");
+    digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+    delay(100);                       // wait for a second
+    client.publish("zbos/motion/control/movement", "{\"angle\": {\"degree\": 90,\"radian\": 1.5707963268},\"force\": 0}");
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+    delay(100);
+    break;
+  default:
+    // statements (do nada)
+    break;
+  }
+  Serial.print("Client State : ");
+  Serial.println(client.state());
+  if(client.state() != 0)
+  {
+    // Connecting to a mqtt broker
+    client.setServer(mqtt_broker, mqtt_port);
+    client.setCallback(callback);
+    while (!client.connected()) {
+      String client_id = "esp8266-client-";
+      client_id += String(WiFi.macAddress());
+      Serial.printf("The client %s connects to the NAO mqtt broker\n", client_id.c_str());
+      if (client.connect(client_id.c_str()))/*, mqtt_username, mqtt_password))*/ {
+        Serial.println("ZORA MQTT connected");
+      } else {
+        Serial.print("failed with state ");
+        Serial.print(client.state());
+        delay(2000);
+      }
+    }
+  }
+  delay(500);
 }
 
 // 
