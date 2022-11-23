@@ -16,14 +16,10 @@ unsigned long Time;
 int ledState = LOW;
 const int couleur[5] = {0xFF0000,0x0000FF,0x008000};
 
-void blink ();
+void blinkz();
 void flash();
-<<<<<<< Updated upstream
 void charniere();
-=======
 void barin();
-
->>>>>>> Stashed changes
 
 void setup() { 
     // Uncomment/edit one of the following lines for your leds arrangement.
@@ -37,16 +33,13 @@ void setup() {
 
 void loop() { 
 
-  //blink();
+  //blinkz();
   //flash();
-<<<<<<< Updated upstream
   charniere();
-=======
   barin();
->>>>>>> Stashed changes
 }
 
-void blink ()
+void blinkz()
 {
   Time = millis();
   if(Time - oldTime >= INTERVAL)
@@ -118,7 +111,6 @@ void flash()
   }
 }
 
-<<<<<<< Updated upstream
 
 void charniere()
 {
@@ -167,7 +159,7 @@ void charniere()
         }
         oldTime = Time;
     }
-=======
+
 void barin()
 {
   Time = millis();
@@ -194,5 +186,4 @@ void barin()
     }
     oldTime = Time;
   }
->>>>>>> Stashed changes
 }
