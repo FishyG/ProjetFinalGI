@@ -14,10 +14,11 @@ CRGB leds[NUM_LEDS];
 unsigned long oldTime;
 unsigned long Time;
 int ledState = LOW;
+const int couleur[5] = {0xFF0000,0x0000FF,0x008000};
 
 void blink ();
 void flash();
-
+void charniere();
 
 void setup() { 
     // Uncomment/edit one of the following lines for your leds arrangement.
@@ -32,7 +33,8 @@ void setup() {
 void loop() { 
 
   //blink();
-  flash();
+  //flash();
+  charniere();
 }
 
 void blink ()
@@ -105,4 +107,54 @@ void flash()
     }
     oldTime = Time;
   }
+}
+
+
+void charniere()
+{
+    Time = millis();
+    if(Time - oldTime >= INTERVAL)
+    {
+        if(ledState == LOW)
+        {
+            for(int i=0; i<3; i++)
+            {
+                for(int j=0; j<NUM_LEDS; j++)
+                {
+                    if(j%2==0)
+                    {
+                        leds[j] = CRGB::Violet;
+                        FastLED.show();
+                    }
+                    else
+                    {
+                        leds[j] = CRGB::Black;
+                        FastLED.show();
+                    }
+                      ledState = HIGH;
+                }
+            }
+        }
+        else
+        {
+            for(int i=0; i<3; i++)
+            {
+                for(int j=0; j<NUM_LEDS; j++)
+                {
+                    if(j%2==0)
+                    {
+                        leds[j] = CRGB::Turquoise;
+                        FastLED.show();
+                    }
+                    else
+                    {
+                        leds[j] = CRGB::Black;
+                        FastLED.show();
+                    }
+                      ledState = HIGH;
+                }
+            }
+        }
+        oldTime = Time;
+    }
 }
