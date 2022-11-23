@@ -18,7 +18,12 @@ const int couleur[5] = {0xFF0000,0x0000FF,0x008000};
 
 void blink ();
 void flash();
+<<<<<<< Updated upstream
 void charniere();
+=======
+void barin();
+
+>>>>>>> Stashed changes
 
 void setup() { 
     // Uncomment/edit one of the following lines for your leds arrangement.
@@ -34,7 +39,11 @@ void loop() {
 
   //blink();
   //flash();
+<<<<<<< Updated upstream
   charniere();
+=======
+  barin();
+>>>>>>> Stashed changes
 }
 
 void blink ()
@@ -109,6 +118,7 @@ void flash()
   }
 }
 
+<<<<<<< Updated upstream
 
 void charniere()
 {
@@ -157,4 +167,32 @@ void charniere()
         }
         oldTime = Time;
     }
+=======
+void barin()
+{
+  Time = millis();
+  if(Time - oldTime >= INTERVAL)
+  {
+    if(ledState == LOW)
+    {
+      leds[0] = CRGB::DarkGreen;
+      leds[1] = CRGB::DodgerBlue;
+      leds[2] = CRGB::Orange;
+      leds[3] = CRGB::Tomato;
+      ledState = HIGH;
+    }
+    else if(ledState == HIGH)
+    {
+      CRGB temp = leds[0];
+      for(int i = 0; i < 3; ++i) 
+      {
+        leds[i] = leds[i+1];
+      }
+      leds[3] = temp;
+      FastLED.show();
+      //ledState = LOW;
+    }
+    oldTime = Time;
+  }
+>>>>>>> Stashed changes
 }
