@@ -15,12 +15,12 @@ void loop()
 {
  
     // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    for (int i = 0; i < 2; i++)
-        for (int j = 0; j < 2; j++)
-          for (int k = 0; k < 2; k++)
+    for (int i = 0; i < 255; i++)
+        for (int j = 0; j < 255; j++)
+          for (int k = 0; k < 255; k++)
           {
            
-              pixels.setPixelColor(0, pixels.Color(i * 255, j * 255, k * 255)); // Moderately bright green color.
+              pixels.setPixelColor(0, pixels.Color(i, j, k)); // Moderately bright green color.
               pixels.show(); // This sends the updated pixel color to the hardware.
               delay(200); // Delay for a period of time (in milliseconds).
           }
@@ -66,12 +66,18 @@ void flashR(int deslaids)
     pixels.setPixelColor(0, pixels.Color(255, 0, 0)); // Moderately bright green color.
     pixels.show(); // This sends the updated pixel color to the hardware.
     delay(deslaids); // Delay for a period of time (in milliseconds).
+    pixels.setPixelColor(0, pixels.Color(0, 0, 0)); // Moderately bright green color.
+    pixels.show(); // This sends the updated pixel color to the hardware.
+    delay(deslaids); // Delay for a period of time (in milliseconds).
 }
 
 
 void flashG(int deslaids)
 {
     pixels.setPixelColor(0, pixels.Color(0, 255, 0)); // Moderately bright green color.
+    pixels.show(); // This sends the updated pixel color to the hardware.
+    delay(deslaids); // Delay for a period of time (in milliseconds).
+    pixels.setPixelColor(0, pixels.Color(0, 0, 0)); // Moderately bright green color.
     pixels.show(); // This sends the updated pixel color to the hardware.
     delay(deslaids); // Delay for a period of time (in milliseconds).
 }
@@ -81,6 +87,9 @@ void flashG(int deslaids)
 void flashB(int deslaids)
 {
     pixels.setPixelColor(0, pixels.Color(0, 0, 255)); // Moderately bright green color.
+    pixels.show(); // This sends the updated pixel color to the hardware.
+    delay(deslaids); // Delay for a period of time (in milliseconds).
+    pixels.setPixelColor(0, pixels.Color(0, 0, 0)); // Moderately bright green color.
     pixels.show(); // This sends the updated pixel color to the hardware.
     delay(deslaids); // Delay for a period of time (in milliseconds).
 }
@@ -126,12 +135,18 @@ void flashRG(int deslaids)
     pixels.setPixelColor(0, pixels.Color(255, 255, 0)); // Moderately bright green color.
     pixels.show(); // This sends the updated pixel color to the hardware.
     delay(deslaids); // Delay for a period of time (in milliseconds).
+    pixels.setPixelColor(0, pixels.Color(0, 0, 0)); // Moderately bright green color.
+    pixels.show(); // This sends the updated pixel color to the hardware.
+    delay(deslaids); // Delay for a period of time (in milliseconds).
 }
 
 
 void flashRB(int deslaids)
 {
     pixels.setPixelColor(0, pixels.Color(255, 0, 255)); // Moderately bright green color.
+    pixels.show(); // This sends the updated pixel color to the hardware.
+    delay(deslaids); // Delay for a period of time (in milliseconds).
+    pixels.setPixelColor(0, pixels.Color(0, 0, 0)); // Moderately bright green color.
     pixels.show(); // This sends the updated pixel color to the hardware.
     delay(deslaids); // Delay for a period of time (in milliseconds).
 }
@@ -141,6 +156,9 @@ void flashRB(int deslaids)
 void flashGB(int deslaids)
 {
     pixels.setPixelColor(0, pixels.Color(0, 255, 255)); // Moderately bright green color.
+    pixels.show(); // This sends the updated pixel color to the hardware.
+    delay(deslaids); // Delay for a period of time (in milliseconds).
+    pixels.setPixelColor(0, pixels.Color(0, 0, 0)); // Moderately bright green color.
     pixels.show(); // This sends the updated pixel color to the hardware.
     delay(deslaids); // Delay for a period of time (in milliseconds).
 }

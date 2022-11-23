@@ -76,7 +76,7 @@ void loop()
   Serial.println("");*/
 
   switch (joystick_0x / 1400) {
-case 0:
+  case 0:
     Serial.println("Entering the Left loop");
     while ( joystick_0x / 1400 == 0)
     {

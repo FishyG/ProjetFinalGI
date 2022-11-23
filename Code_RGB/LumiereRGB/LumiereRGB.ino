@@ -16,6 +16,8 @@ unsigned long Time;
 int ledState = LOW;
 
 void blink ();
+void flash();
+
 
 void setup() { 
     // Uncomment/edit one of the following lines for your leds arrangement.
@@ -29,8 +31,8 @@ void setup() {
 
 void loop() { 
 
-  blink();
-
+  //blink();
+  flash();
 }
 
 void blink ()
@@ -55,6 +57,51 @@ void blink ()
         FastLED.show();
       }
       ledState = LOW;
+    }
+    oldTime = Time;
+  }
+}
+
+
+void flash()
+{
+    Time = millis();
+  if(Time - oldTime >= INTERVAL)
+  {
+    if(ledState == LOW)
+    {
+        for(int i=0; i<NUM_LEDS; i++)
+        {
+            if(i%2==0)
+            {
+                leds[i] = CRGB::FireBrick;
+                FastLED.show();
+            }
+            else
+            {
+                leds[i] = CRGB::Black;
+                FastLED.show();
+            }
+              ledState = HIGH;
+        }
+    
+    }
+    else
+    {
+        for(int i=0; i<NUM_LEDS; i++)
+        {
+            if(i%2==0)
+            {
+                leds[i] = CRGB::Black;
+                FastLED.show();
+            }
+            else
+            {
+                leds[i] = CRGB::FireBrick;
+                FastLED.show();
+            }
+              ledState = LOW;
+        }
     }
     oldTime = Time;
   }
