@@ -1,29 +1,31 @@
 #include <FastLED.h>
+#include "LumiereRGB.h"
 
 // How many leds in your strip?
-#define NUM_LEDS 4
+/*#define NUM_LEDS 4
 #define BRIGHTNESS  32
 
 #define DATA_PIN 16
 #define CLOCK_PIN 13
-
+*/
 // Define the array of leds
-CRGB leds[NUM_LEDS];
+//CRGB leds[NUM_LEDS];
 
-unsigned long oldTime;
+/*unsigned long oldTime;
 unsigned long Time;
-int ledState = LOW;
+int ledState = LOW;*/
 
 /*
  * Les valeurs modifiable possible
  */
 #define INTERVAL 500
-CRGB couleur[NUM_LEDS];
+//CRGB couleur[NUM_LEDS];
 
-void blinkz();
+/*void blinkz();
 void flash();
 void charniere();
 void barin();
+*/
 
 void setup() { 
     // Uncomment/edit one of the following lines for your leds arrangement.
