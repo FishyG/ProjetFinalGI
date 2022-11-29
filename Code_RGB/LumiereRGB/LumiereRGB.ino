@@ -1,9 +1,8 @@
 #include <FastLED.h>
 
 // How many leds in your strip?
-#define NUM_LEDS 12
+#define NUM_LEDS 4
 #define BRIGHTNESS  32
-#define INTERVAL 500
 
 #define DATA_PIN 16
 #define CLOCK_PIN 13
@@ -14,7 +13,12 @@ CRGB leds[NUM_LEDS];
 unsigned long oldTime;
 unsigned long Time;
 int ledState = LOW;
-const int couleur[5] = {0xFF0000,0x0000FF,0x008000};
+
+/*
+ * Les valeurs modifiable possible
+ */
+#define INTERVAL 500
+CRGB couleur[NUM_LEDS];
 
 void blinkz();
 void flash();
@@ -25,10 +29,16 @@ void setup() {
     // Uncomment/edit one of the following lines for your leds arrangement.
     // ## Clockless types ##
     FastLED.setBrightness(  BRIGHTNESS );
-    FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed
-    
+    FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed 
     FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
-    
+
+//Changer la couleur ici
+//https://www.w3schools.com/colors/colors_names.asp
+//Couleur Black = éteint
+    couleur[0]= CRGB::AliceBlue;
+    couleur[1]= CRGB::Black;
+    couleur[2]= CRGB::Black;
+    couleur[3]= CRGB::Black;
 }
 
 void loop() { 
@@ -48,7 +58,7 @@ void blinkz()
     {
       for( int i = 0; i < NUM_LEDS; ++i) 
       {
-        leds[i] = CRGB::FireBrick;
+        leds[i] = couleur[i];
         FastLED.show();
       }
       ledState = HIGH;
@@ -77,34 +87,23 @@ void flash()
         for(int i=0; i<NUM_LEDS; i++)
         {
             if(i%2==0)
-            {
-                leds[i] = CRGB::FireBrick;
-                FastLED.show();
-            }
+                leds[i] = couleur[i];
             else
-            {
                 leds[i] = CRGB::Black;
-                FastLED.show();
-            }
-              ledState = HIGH;
+            FastLED.show();
+            ledState = HIGH;
         }
-    
     }
     else
     {
         for(int i=0; i<NUM_LEDS; i++)
         {
             if(i%2==0)
-            {
                 leds[i] = CRGB::Black;
-                FastLED.show();
-            }
             else
-            {
-                leds[i] = CRGB::FireBrick;
-                FastLED.show();
-            }
-              ledState = LOW;
+                leds[i] = couleur[i];
+            FastLED.show();
+            ledState = LOW;
         }
     }
     oldTime = Time;
@@ -124,16 +123,11 @@ void charniere()
                 for(int j=0; j<NUM_LEDS; j++)
                 {
                     if(j%2==0)
-                    {
-                        leds[j] = CRGB::Violet;
-                        FastLED.show();
-                    }
-                    else
-                    {
-                        leds[j] = CRGB::Black;
-                        FastLED.show();
-                    }
-                      ledState = HIGH;
+                        leds[j] = couleur[i];
+                    else                  
+                        leds[j] = CRGB::Black; 
+                    FastLED.show();
+                    ledState = HIGH;
                 }
             }
         }
@@ -144,22 +138,17 @@ void charniere()
                 for(int j=0; j<NUM_LEDS; j++)
                 {
                     if(j%2==0)
-                    {
-                        leds[j] = CRGB::Turquoise;
-                        FastLED.show();
-                    }
+                        leds[j] = couleur[i];                    
                     else
-                    {
                         leds[j] = CRGB::Black;
-                        FastLED.show();
-                    }
-                      ledState = HIGH;
+                    FastLED.show();
+                    ledState = HIGH;
                 }
             }
         }
         oldTime = Time;
     }
-
+}
 void barin()
 {
   Time = millis();
@@ -167,10 +156,10 @@ void barin()
   {
     if(ledState == LOW)
     {
-      leds[0] = CRGB::DarkGreen;
-      leds[1] = CRGB::DodgerBlue;
-      leds[2] = CRGB::Orange;
-      leds[3] = CRGB::Tomato;
+      leds[0] = couleur[0];
+      leds[1] = couleur[1];
+      leds[2] = couleur[2];
+      leds[3] = couleur[3];
       ledState = HIGH;
     }
     else if(ledState == HIGH)
