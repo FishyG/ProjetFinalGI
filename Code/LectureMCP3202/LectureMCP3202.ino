@@ -5,61 +5,107 @@
 #define CS_3202_0 15
 #define CS_3202_1 2
 
+// Debugging option
+#define DEBUG 1 // Uncomment to enable debugging, Comment to disable debugging
+
+// Joystick's deathzone
+#define DEATHZONE_0 35  // Optional, if not set it will try to set his own deathzone (more or less accurate) -- PLEASE FIX
+#define DEATHZONE_1 35
+
 // WiFi
-const char *ssid = "tge_sansfil_270"; // Enter your WiFi name
-const char *password = "sherbrooke";  // Enter WiFi password
+const char *ssid = "BELL802"; // Enter your WiFi name
+const char *password = "Toi-memelala";  // Enter WiFi password
 
 // MQTT Broker
-const char *mqtt_broker = "10.240.8.169";
+const char *mqtt_broker = "10.240.8.168";
 const char *topic = "zbos/dialog/set";
 const char *mqtt_username = "emqx";
 const char *mqtt_password = "public";
 const int mqtt_port = 1883;
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////  DO NOT CHANGE ANYTHING BELOW THIS LINE UNLESS YOUR NAME IS JESSY  ////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 WiFiClient espClient;
 PubSubClient client(espClient);
+
+int deathZone_0 = 0;
+int deathZone_1 = 0;
 
 void setup()
 {
   Serial.begin(115200);
 
   // Config SPI
-  Serial.println("Configuring SPI..");
+  Serial.println("\nConfiguring SPI..");
   pinMode(CS_3202_0, OUTPUT);
   pinMode(CS_3202_1, OUTPUT);
   digitalWrite(CS_3202_0, HIGH);
-  digitalWrite(CS_3202_1, HIGH);
+  digitalWrite(CS_3202_1, LOW);
   SPI.begin();
   SPI.setClockDivider(SPI_CLOCK_DIV8);
   Serial.println("SPI configured");
 
   // Config WiFi
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
-      Serial.println("Connecting to WiFi..");
-  }
-  Serial.println("Connected to the WiFi network");
+  #ifndef DEBUG
+    int i = 0;
+    WiFi.begin(ssid, password);
+    while (WiFi.status() != WL_CONNECTED) {
+        if(i % 10)
+          Serial.print(".");
+        else
+          Serial.print("\nConnecting to WiFi");        
+        i++;
+        delay(500);
+    }
+    Serial.println("\nConnected to the WiFi network");
+  #endif
 
   // Connecting to a mqtt broker
-  client.setServer(mqtt_broker, mqtt_port);
-  client.setCallback(callback);
-  while (!client.connected()) {
-    String client_id = "esp8266-client-";
-    client_id += String(WiFi.macAddress());
-    Serial.printf("The client %s connects to the NAO mqtt broker\n", client_id.c_str());
-    if (client.connect(client_id.c_str()))/*, mqtt_username, mqtt_password))*/ {
-      Serial.println("ZORA MQTT connected");
-    } else {
-      Serial.print("failed with state ");
-      Serial.print(client.state());
-      delay(2000);
+  #ifndef DEBUG
+    client.setServer(mqtt_broker, mqtt_port);
+    client.setCallback(callback);
+    while (!client.connected()) {
+      String client_id = "esp8266-client-";
+      client_id += String(WiFi.macAddress());
+      Serial.printf("The client %s connects to the NAO mqtt broker\n", client_id.c_str());
+      if (client.connect(client_id.c_str()))/*, mqtt_username, mqtt_password))*/ {
+        Serial.println("ZORA MQTT connected");
+      } else {
+        Serial.print("failed with state ");
+        Serial.println(client.state());
+        delay(2000);
+      }
     }
-  }
+  #endif
+
+  // Set the death_zone of the joystick 0
+  #ifdef DEATHZONE_0
+    deathZone_0 = DEATHZONE_0;    
+    Serial.printf("\nStatic Deathzone_0 : %d\n",deathZone_0);
+  #else
+    Serial.println("Autoset deathzone_0 ...");
+    deathZone_0 = (mesureForce(0) + mesureForce(0)/2);
+    Serial.printf("Deathzone_0 : %d\n",deathZone_0);
+  #endif  
+  
+  // Set the death_zone of the joystick 1
+  #ifdef DEATHZONE_1
+    deathZone_1 = DEATHZONE_1;
+    Serial.printf("\nStatic Deathzone_1 : %d\n",deathZone_1);
+  #else
+    Serial.println("Autoset deathzone_1 ...");
+    deathZone_1 = mesureForce(1);
+    Serial.printf("Deathzone_1 : %d\n",deathZone_1);
+  #endif  
 }
 
 void loop()
 {
+
   int joystick_0x = 0;
   int joystick_0y = 0;
   int joystick_1x = 0;
@@ -94,47 +140,51 @@ void loop()
     // Serial.println(joystick_1y);
     // Serial.println("");
 
-    distance0 = mesureForce(1);
-    angle0 = mesureAngle(1);
+    distance1 = mesureForce(1);
+    angle1 = mesureAngle(1);
 
     //Serial.print(angle0);
 
-    if(distance0 > 10)
+    if(distance1 > deathZone_1)
     {
       Serial.println("Walking...");
-      if(!walkNAO(angle0, distance0))
+      if(walkNAO(angle1, distance1))
         Serial.println("Error 420, cannot walk");
+      else
+        walking = true;
       delay(10);
-      walking = true;
     }
     else if (walking)
     {
       Serial.println("Stopping...");
-      if(!walkNAO(angle0, 0))
+      if(walkNAO(angle1, 0))
         Serial.println("Error 69, cannot stop");
+      else
+        walking = false;
       delay(10);
-      walking = false;
     }
     
-    if(client.state() != 0)
-    {
-      Serial.println("Client Failed with status " + client.state());
-      // Connecting to a mqtt broker
-      client.setServer(mqtt_broker, mqtt_port);
-      client.setCallback(callback);
-      while (!client.connected()) {
-        String client_id = "esp8266-client-";
-        client_id += String(WiFi.macAddress());
-        Serial.printf("The client %s connects to the NAO mqtt broker\n", client_id.c_str());
-        if (client.connect(client_id.c_str()))/*, mqtt_username, mqtt_password))*/ {
-          Serial.println("ZORA MQTT connected");
-        } else {
-          Serial.print("failed with state ");
-          Serial.print(client.state());
-          delay(100);
+    #ifndef DEBUG
+      if(client.state() != 0)
+      {
+        Serial.println("Client Failed with status " + client.state());
+        // Connecting to a mqtt broker
+        client.setServer(mqtt_broker, mqtt_port);
+        client.setCallback(callback);
+        while (!client.connected()) {
+          String client_id = "esp8266-client-";
+          client_id += String(WiFi.macAddress());
+          Serial.printf("The client %s connects to the NAO mqtt broker\n", client_id.c_str());
+          if (client.connect(client_id.c_str()))/*, mqtt_username, mqtt_password))*/ {
+            Serial.println("ZORA MQTT connected");
+          } else {
+            Serial.print("failed with state ");
+            Serial.print(client.state());
+            delay(100);
+          }
         }
       }
-    }
+    #endif
     
     switch (move) {
     case '1':
@@ -164,9 +214,7 @@ void loop()
   }
 }
 
-/*
-  Lecture d'un des MCP3202
-*/
+///
 int Read3202(int CHANNEL, int CS) {
   int msb;
   int lsb;
@@ -192,10 +240,8 @@ void callback(char *topic, byte *payload, unsigned int length) {
   Serial.println("-----------------------");
 }
 
-/*
-  Mesure la force du joystick (0 à 100)
-*/
-int mesureForce(int choice){
+int mesureForce(int choice)
+{
   int joystick_x = 0;
   int joystick_y = 0;
 
@@ -223,10 +269,8 @@ int mesureForce(int choice){
   return distance / 20.48;
 }
 
-/*
-  Mesure l'angle du joystick (0 à 360)
-*/
-float mesureAngle(int choice){
+float mesureAngle(int choice)
+{
   int joystick_x = 0;
   int joystick_y = 0;
 
@@ -251,70 +295,29 @@ float mesureAngle(int choice){
   return angle;
 }
 
-/*
-  Make the robot walk
-*/
-bool walkNAO(int angle, int force){
+
+bool walkNAO(int angle, int force)
+{
   bool retour = false;
   String commande = "test";
   char commandeChar[100] = "Not empty xD";
 
   digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-
-  if(force)
-    Serial.println("Walking Now)");
-  else
-    Serial.println("Stoping Now)"
+  //Serial.println("Going Forward (looping)");
   //delay(10);                       // wait for a bit
       
   commande = (String)"{\"angle\": {\"degree\": " + angle + ",\"radian\": 1.5707963268},\"force\": " + force + "}";
   commande.toCharArray(commandeChar,(commande.length()+1));
   Serial.print("Sending : ");
   Serial.println(commandeChar);
-
-  retour = client.publish("zbos/motion/control/movement", commandeChar);
+  
+  #ifndef DEBUG
+    retour = !client.publish("zbos/motion/control/movement", commandeChar);  
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
 
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
-  return retour;
-}
-
-/*
-  Mesure Yaw/roll (
-*/
-bool headNAO(int choice){
-  int joystick_x = 0;
-  int joystick_y = 0;
-  
-  bool retour = false;
-  String commande = "test";
-  char commandeChar[100] = "Not empty xD";
-
-  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-
-  if(choice == 1)
-  {
-    joystick_x = Read3202(0, CS_3202_0);
-    joystick_y = Read3202(1, CS_3202_0);
-  }
-  else if(choice == 2)
-  {
-    joystick_x = Read3202(0, CS_3202_1);
-    joystick_y = Read3202(1, CS_3202_1);
-  }
-  
-  joystick_x = (joystick_x - 2048) / 20.48;
-  joystick_y = (joystick_y - 2048) / 20.48;
-
-  //delay(10);                       // wait for a bit
-      
-  commande = (String)"{\"pitch\":" + joystick_y + ",\"yaw\":" + joystick_x + '}';
-  commande.toCharArray(commandeChar,(commande.length()+1));
-  Serial.print("Sending : ");
-  Serial.println(commandeChar);
-
-  retour = client.publish("zbos/motion/control/head", commandeChar);
-
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
-
   return retour;
 }
