@@ -1,16 +1,21 @@
 #include <SPI.h>
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
-
-#define CS_3202_0 15
-#define CS_3202_1 2
+#include <FastLED.h>
+#include "LumiereRGB.h"
 
 // Debugging option
 #define DEBUG 1 // Uncomment to enable debugging, Comment to disable debugging
 
-// Joystick's deathzone
-#define DEATHZONE_0 35  // Optional, if not set it will try to set his own deathzone (more or less accurate) -- PLEASE FIX
-#define DEATHZONE_1 35
+// DEL stuff idk
+#define INTERVAL 500
+
+// Joystick's stuff
+#define CS_3202_0 15
+#define CS_3202_1 2
+
+const int deathZone_0 = 35;
+const int deathZone_1 = 35;
 
 // WiFi
 const char *ssid = "BELL802"; // Enter your WiFi name
@@ -31,14 +36,12 @@ const int mqtt_port = 1883;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
-
-int deathZone_0 = 0;
-int deathZone_1 = 0;
-
+    
 void setup()
 {
   Serial.begin(115200);
-
+  FastLED.setBrightness(  BRIGHTNESS );
+  FastLED.addLeds<WS2812B, DATA_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed 
   // Config SPI
   Serial.println("\nConfiguring SPI..");
   pinMode(CS_3202_0, OUTPUT);
@@ -81,36 +84,11 @@ void setup()
       }
     }
   #endif
-
-  // Set the death_zone of the joystick 0
-  #ifdef DEATHZONE_0
-    deathZone_0 = DEATHZONE_0;    
-    Serial.printf("\nStatic Deathzone_0 : %d\n",deathZone_0);
-  #else
-    Serial.println("Autoset deathzone_0 ...");
-    deathZone_0 = (mesureForce(0) + mesureForce(0)/2);
-    Serial.printf("Deathzone_0 : %d\n",deathZone_0);
-  #endif  
-  
-  // Set the death_zone of the joystick 1
-  #ifdef DEATHZONE_1
-    deathZone_1 = DEATHZONE_1;
-    Serial.printf("\nStatic Deathzone_1 : %d\n",deathZone_1);
-  #else
-    Serial.println("Autoset deathzone_1 ...");
-    deathZone_1 = mesureForce(1);
-    Serial.printf("Deathzone_1 : %d\n",deathZone_1);
-  #endif  
 }
 
 void loop()
 {
-
-  int joystick_0x = 0;
-  int joystick_0y = 0;
-  int joystick_1x = 0;
-  int joystick_1y = 0;
-
+  int i = 0;  
   int distance0 = 0;
   int distance1 = 0;
 
@@ -124,31 +102,15 @@ void loop()
   while(1)
   {
     move = Serial.read();
-    // joystick_0x = Read3202(0, CS_3202_0);
-    // joystick_0y = Read3202(1, CS_3202_0);
-    // joystick_1x = Read3202(0, CS_3202_1);
-    // joystick_1y = Read3202(1, CS_3202_1);
 
-    // Serial.print("Joystick 0 X = ");
-    // Serial.print(joystick_0x);
-    // Serial.print("\tJoystick 0 Y = ");
-    // Serial.println(joystick_0y);
-    // Serial.println("");
-    // Serial.print("Joystick 1 X = ");
-    // Serial.print(joystick_1x);
-    // Serial.print("\tJoystick 1 Y = ");
-    // Serial.println(joystick_1y);
-    // Serial.println("");
-
+    distance0 = mesureForce(0);
     distance1 = mesureForce(1);
-    angle1 = mesureAngle(1);
+    angle0 = mesureAngle(0);
 
-    //Serial.print(angle0);
-
-    if(distance1 > deathZone_1)
+    if(distance0 > deathZone_0)
     {
       Serial.println("Walking...");
-      if(walkNAO(angle1, distance1))
+      if(walkNAO(angle0, distance0))
         Serial.println("Error 420, cannot walk");
       else
         walking = true;
@@ -157,12 +119,21 @@ void loop()
     else if (walking)
     {
       Serial.println("Stopping...");
-      if(walkNAO(angle1, 0))
+      if(walkNAO(angle0, 0))
         Serial.println("Error 69, cannot stop");
       else
         walking = false;
       delay(10);
     }
+
+    if(distance1 > deathZone_1)
+    {
+      Serial.println("Moving head...");
+      moveHeadNAO(mesurePitch(1), mesureYaw(1));
+      // Serial.printf("Yaw : %d\n",mesureYaw(1));
+      // Serial.printf("Pitch : %d\n",mesurePitch(1));
+    }
+
     
     #ifndef DEBUG
       if(client.state() != 0)
@@ -210,12 +181,15 @@ void loop()
       // statements (do nada)
       break;
     }
-    delay(500);
+    delay(10);
+    delXD(i);
+    i++;
   }
 }
 
 ///
-int Read3202(int CHANNEL, int CS) {
+int Read3202(int CHANNEL, int CS) 
+{  
   int msb;
   int lsb;
   int commandBytes = B10100000 ;// channel 0
@@ -229,7 +203,8 @@ int Read3202(int CHANNEL, int CS) {
   return ((int) msb) << 8 | lsb;
 }
 
-void callback(char *topic, byte *payload, unsigned int length) {
+void callback(char *topic, byte *payload, unsigned int length) 
+{
   Serial.print("Message arrived in topic: ");
   Serial.println(topic);
   Serial.print("Message:");
@@ -247,12 +222,12 @@ int mesureForce(int choice)
 
   int distance = 0;
 
-  if(choice == 1)
+  if(choice == 0)
   {
     joystick_x = Read3202(0, CS_3202_0);
     joystick_y = Read3202(1, CS_3202_0);
   }
-  else if(choice == 2)
+  else if(choice == 1)
   {
     joystick_x = Read3202(0, CS_3202_1);
     joystick_y = Read3202(1, CS_3202_1);
@@ -276,12 +251,12 @@ float mesureAngle(int choice)
 
   int angle = 0;
 
-  if(choice == 1)
+  if(choice == 0)
   {
     joystick_x = Read3202(0, CS_3202_0);
     joystick_y = Read3202(1, CS_3202_0);
   }
-  else if(choice == 2)
+  else if(choice == 1)
   {
     joystick_x = Read3202(0, CS_3202_1);
     joystick_y = Read3202(1, CS_3202_1);
@@ -295,6 +270,41 @@ float mesureAngle(int choice)
   return angle;
 }
 
+int mesureYaw(int choice)
+{
+  int joystick_x = 0;
+
+  if(choice == 0)
+  {
+    joystick_x = Read3202(0, CS_3202_0);
+  }
+  else if(choice == 1)
+  {
+    joystick_x = Read3202(0, CS_3202_1);
+  }
+  
+  joystick_x = (joystick_x / 21)-100;
+
+  return joystick_x;
+}
+
+int mesurePitch(int choice)
+{
+  int joystick_y = 0;
+
+  if(choice == 0)
+  {
+    joystick_y = Read3202(1, CS_3202_0);
+  }
+  else if(choice == 1)
+  {
+    joystick_y = Read3202(1, CS_3202_1);
+  }
+  
+  joystick_y = (joystick_y / 21)-100;
+
+  return joystick_y;
+}
 
 bool walkNAO(int angle, int force)
 {
@@ -303,8 +313,6 @@ bool walkNAO(int angle, int force)
   char commandeChar[100] = "Not empty xD";
 
   digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-  //Serial.println("Going Forward (looping)");
-  //delay(10);                       // wait for a bit
       
   commande = (String)"{\"angle\": {\"degree\": " + angle + ",\"radian\": 1.5707963268},\"force\": " + force + "}";
   commande.toCharArray(commandeChar,(commande.length()+1));
@@ -313,6 +321,30 @@ bool walkNAO(int angle, int force)
   
   #ifndef DEBUG
     retour = !client.publish("zbos/motion/control/movement", commandeChar);  
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
+
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+  return retour;
+}
+
+bool moveHeadNAO(int pitch, int yaw)
+{
+  bool retour = false;
+  String commande = "test";
+  char commandeChar[100] = "Not empty xD";
+
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+      
+  commande = (String)"{\"pitch\":" + pitch + ",\"yaw\":" + yaw + "}";
+  commande.toCharArray(commandeChar,(commande.length()+1));
+  Serial.print("Sending : ");
+  Serial.println(commandeChar);
+  
+  #ifndef DEBUG
+    retour = !client.publish("zbos/motion/control/head", commandeChar);
   #else
     retour = false;
     Serial.println("Running in debug mode! \t Nothing was sent!");
