@@ -1,54 +1,26 @@
-#include <FastLED.h>
-#include "LumiereRGB.h"
+void delXD(int compteur)
+{
+  //Changer la couleur ici
+  //https://www.w3schools.com/colors/colors_names.asp
+  //Couleur Black = éteint
+  couleur[0]= CRGB::AliceBlue;
+  couleur[1]= CRGB::Green;
+  couleur[2]= CRGB::YellowGreen;
+  couleur[3]= CRGB::Black;
 
-// How many leds in your strip?
-/*#define NUM_LEDS 4
-#define BRIGHTNESS  32
+  jgmDashDEL(compteur);
+  // blinkz();
+  // flash();
+  // charniere();
+  // barin();
 
-#define DATA_PIN 16
-#define CLOCK_PIN 13
-*/
-// Define the array of leds
-//CRGB leds[NUM_LEDS];
-
-/*unsigned long oldTime;
-unsigned long Time;
-int ledState = LOW;*/
-
-/*
- * Les valeurs modifiable possible
- */
-#define INTERVAL 500
-//CRGB couleur[NUM_LEDS];
-
-/*void blinkz();
-void flash();
-void charniere();
-void barin();
-*/
-
-void setup() { 
-    // Uncomment/edit one of the following lines for your leds arrangement.
-    // ## Clockless types ##
-    FastLED.setBrightness(  BRIGHTNESS );
-    FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed 
-    FastLED.addLeds<WS2812B, DATA_PIN, RGB>(leds, NUM_LEDS);  // GRB ordering is typical
-
-//Changer la couleur ici
-//https://www.w3schools.com/colors/colors_names.asp
-//Couleur Black = éteint
-    couleur[0]= CRGB::AliceBlue;
-    couleur[1]= CRGB::Black;
-    couleur[2]= CRGB::Black;
-    couleur[3]= CRGB::Black;
-}
-
-void loop() { 
-
-  //blinkz();
-  //flash();
-  charniere();
-  barin();
+  // leds[0] = CRGB::Red;
+  // FastLED.show();
+  // delay(500);
+  // // Now turn the LED off, then pause
+  // leds[0] = CRGB::Black;
+  // FastLED.show();
+  // delay(500);
 }
 
 void blinkz()
@@ -78,7 +50,6 @@ void blinkz()
   }
 }
 
-
 void flash()
 {
     Time = millis();
@@ -91,9 +62,7 @@ void flash()
             if(i%2==0)
                 leds[i] = couleur[i];
             else
-                leds[i] = CRGB::Black;
-            FastLED.show();
-            ledState = HIGH;
+                leds[i] = CRGB::Black;FastLED.setBrightness(  BRIGHTNESS );
         }
     }
     else
@@ -111,7 +80,6 @@ void flash()
     oldTime = Time;
   }
 }
-
 
 void charniere()
 {
@@ -151,6 +119,7 @@ void charniere()
         oldTime = Time;
     }
 }
+
 void barin()
 {
   Time = millis();
@@ -177,4 +146,13 @@ void barin()
     }
     oldTime = Time;
   }
+}
+
+void jgmDashDEL(int compteur)
+{
+  for( int i = 0; i < NUM_LEDS; ++i) {
+        leds[i] = ColorFromPalette( RainbowColors_p, compteur, BRIGHTNESS, LINEARBLEND);
+        //colorIndex += 3;
+    }
+    FastLED.show();
 }
