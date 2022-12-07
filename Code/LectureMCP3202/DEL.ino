@@ -8,7 +8,7 @@ void delXD(int compteur)
   couleur[2]= CRGB::YellowGreen;
   couleur[3]= CRGB::Black;
 
-  jgmDashDEL(compteur);
+  
   // blinkz();
   // flash();
   // charniere();
@@ -21,6 +21,18 @@ void delXD(int compteur)
   // leds[0] = CRGB::Black;
   // FastLED.show();
   // delay(500);
+}
+
+void buttonA(int compteur)
+{
+  jgmDashDEL(compteur);
+  NAO_sit();
+}
+
+void buttonB(int compteur)
+{
+  NAO_crouch();
+  NAO
 }
 
 void blinkz()
