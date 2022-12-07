@@ -9,6 +9,9 @@
 //PIN
 #define DATA_PIN 16
 
+// DEL stuff idk
+#define INTERVAL 500
+
 /*  CONSTANTES_FIN  */
 
 
