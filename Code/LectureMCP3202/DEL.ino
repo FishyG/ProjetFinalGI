@@ -4,17 +4,17 @@
   ============================================
   blinkz();             Fait clignoter les DELs
   flash();              Fait flasher les DELS
-  charniere();          Tentative de quelque chose d'indéfinie ¯\_(ツ)_/¯
+  charniere();          Tentative de quelque chose d'indéfini ¯\_(ツ)_/¯
   barin();              Fait tourner les DELs
   jgmDashDEL(compteur); Dels arc-en-ciel 😎
 
   == Fonctions pour contrôler le robot NAO  ==
-  NAO_crouch();           NAO s'accroupie
+  NAO_crouch();           NAO s'accroupit
   NAO_lyingBelly();       NAO se couche sur son ventre
   NAO_monster();          NAO fait l'animation de monstre
   NAO_pong();             NAO fait l'animation du jeu de pong 🎮
-  NAO_sit();              NAO s'assoie
-  NAO_sitRelax();         NAO s'assoie de façon relax
+  NAO_sit();              NAO s'assoit
+  NAO_sitRelax();         NAO s'assoit de façon relax
   NAO_talk("Hello", 50);  NAO dit le message (message à dire, volume du message)
 */
 
