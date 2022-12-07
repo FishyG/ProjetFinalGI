@@ -24,12 +24,3 @@ CRGB couleur[NUM_LEDS];
 unsigned long oldTime;
 unsigned long Time;
 int ledState = LOW;
-
-
-/*  PROTOTYPE   */
-void blinkz();
-void flash();
-void charniere();
-void barin();
-
-/*  PROTOTYPE_FIN   */
