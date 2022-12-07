@@ -18,16 +18,18 @@
   NAO_talk("Hello", 50);  NAO dit le message (message à dire, volume du message)
 */
 
-//Changer la couleur ici
-//https://www.w3schools.com/colors/colors_names.asp
-//Couleur Black = éteint
-couleur[0]= CRGB::AliceBlue;
-couleur[1]= CRGB::Green;
-couleur[2]= CRGB::YellowGreen;
-couleur[3]= CRGB::Black;
+
 
 void delXD(int compteur)
 {
+  //Changer la couleur ici
+  //https://www.w3schools.com/colors/colors_names.asp
+  //Couleur Black = éteint
+  couleur[0]= CRGB::AliceBlue;
+  couleur[1]= CRGB::Green;
+  couleur[2]= CRGB::YellowGreen;
+  couleur[3]= CRGB::Black;
+
   jgmDashDEL(compteur);
   // blinkz();
   // flash();

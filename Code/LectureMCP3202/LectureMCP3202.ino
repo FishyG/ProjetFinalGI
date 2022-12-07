@@ -160,6 +160,7 @@ void loop()
       }
     #endif
     
+
     delay(10);
     if(digitalRead(5))
       buttonA(i);
@@ -352,7 +353,7 @@ bool NAO_crouch()
   commande.toCharArray(commandeChar,(commande.length()+1));
   Serial.print("Sending : ");
   Serial.println(commandeChar);
-  delay(10);
+  delay(100);
   #ifndef DEBUG
     retour = !client.publish("zbos/motion/animation/run", commandeChar);
   #else
