@@ -1,3 +1,23 @@
+/*
+  ============================================
+  == Fonctions pour contrôler les DELs      ==
+  ============================================
+  blinkz();             Fait clignoter les DELs
+  flash();              Fait flasher les DELS
+  charniere();          Tentative de quelque chose d'indéfinie ¯\_(ツ)_/¯
+  barin();              Fait tourner les DELs
+  jgmDashDEL(compteur); Dels arc-en-ciel 😎
+
+  == Fonctions pour contrôler le robot NAO  ==
+  NAO_crouch();           NAO s'accroupie
+  NAO_lyingBelly();       NAO se couche sur son ventre
+  NAO_monster();          NAO fait l'animation de monstre
+  NAO_pong();             NAO fait l'animation du jeu de pong 🎮
+  NAO_sit();              NAO s'assoie
+  NAO_sitRelax();         NAO s'assoie de façon relax
+  NAO_talk("Hello", 50);  NAO dit le message (message à dire, volume du message)
+*/
+
 void delXD(int compteur)
 {
   //Changer la couleur ici

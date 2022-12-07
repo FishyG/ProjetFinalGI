@@ -112,7 +112,7 @@ void loop()
     distance1 = mesureForce(0);
     angle0 = mesureAngle(1);
 
-    if(distance0 > deathZone_0)
+    if(distance0 > deathZone_0) // Si le joystick est hors de la deathzone
     {
       Serial.println("Walking...");
       if(NAO_walk(angle0, distance0))
@@ -121,7 +121,7 @@ void loop()
         walking = true;
       delay(10);
     }
-    else if (walking)
+    else if (walking) // Envoie la commande pour stopper le robot NAO
     {
       Serial.println("Stopping...");
       if(NAO_walk(angle0, 0))
@@ -131,12 +131,10 @@ void loop()
       delay(10);
     }
 
-    if(distance1 > deathZone_1)
+    if(distance1 > deathZone_1) // Si le joystick est hors de la deathzone
     {
       Serial.println("Moving head...");
       NAO_moveHead(mesureYaw(0),mesurePitch(0));
-      // Serial.printf("Yaw : %d\n",mesureYaw(1));
-      // Serial.printf("Pitch : %d\n",mesurePitch(1));
     }
 
     
@@ -162,30 +160,6 @@ void loop()
       }
     #endif
     
-    switch (move) {
-    case '1':
-      Serial.println("Sitting");
-      digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-      delay(100);                       // wait for a second
-      digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-      client.publish("zbos/motion/animation/run", "{\"type\":\"Posture\",\"animationId\":\"sit\"}");
-      delay(3000);
-      break;
-    case '2':
-      //while(client.subscribe("zjoystick_0ybos/motion/animation/event"))
-        Serial.println(client.subscribe("zbos/motion/animation/event"));
-        Serial.println("Crouching");
-        digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-        delay(100);                       // wait for a second
-        digitalWrite(LED_BUILTIN, HIGH);    // turn the LED off by making the voltage LOW
-        client.publish("zbos/motion/animation/run", "{\"type\":\"Posture\",\"animationId\":\"Crouch\"}");
-        //client.publish("zbos/motion/animation/event", "true");
-        delay(3000);
-      break;
-    default:
-      // statements (do nada)
-      break;
-    }
     delay(10);
     if(digitalRead(5))
       buttonA(i);
@@ -378,7 +352,7 @@ bool NAO_crouch()
   commande.toCharArray(commandeChar,(commande.length()+1));
   Serial.print("Sending : ");
   Serial.println(commandeChar);
-  delay(100);
+  delay(10);
   #ifndef DEBUG
     retour = !client.publish("zbos/motion/animation/run", commandeChar);
   #else
