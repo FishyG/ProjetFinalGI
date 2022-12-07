@@ -26,13 +26,15 @@ void delXD(int compteur)
 void buttonA(int compteur)
 {
   jgmDashDEL(compteur);
-  NAO_sit();
+  // NAO_pong();
+  NAO_crouch();
 }
 
 void buttonB(int compteur)
 {
-  NAO_crouch();
-  NAO
+  // NAO_monster();
+  NAO_talk("Barin the banana", 60);
+  // NAO_crouch();
 }
 
 void blinkz()
@@ -162,7 +164,8 @@ void barin()
 
 void jgmDashDEL(int compteur)
 {
-  for( int i = 0; i < NUM_LEDS; ++i) {
+  for( int i = 0; i < NUM_LEDS; ++i) 
+    {
         leds[i] = ColorFromPalette( RainbowColors_p, compteur, BRIGHTNESS, LINEARBLEND);
         //colorIndex += 3;
     }

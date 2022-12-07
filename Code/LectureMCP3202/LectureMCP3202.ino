@@ -378,7 +378,7 @@ bool NAO_crouch()
   commande.toCharArray(commandeChar,(commande.length()+1));
   Serial.print("Sending : ");
   Serial.println(commandeChar);
-  
+  delay(100);
   #ifndef DEBUG
     retour = !client.publish("zbos/motion/animation/run", commandeChar);
   #else
@@ -401,7 +401,7 @@ bool NAO_sit()
   commande.toCharArray(commandeChar,(commande.length()+1));
   Serial.print("Sending : ");
   Serial.println(commandeChar);
-  
+  delay(100);
   #ifndef DEBUG
     retour = !client.publish("zbos/motion/animation/run", commandeChar);
   #else
@@ -424,7 +424,7 @@ bool NAO_sitRelax()
   commande.toCharArray(commandeChar,(commande.length()+1));
   Serial.print("Sending : ");
   Serial.println(commandeChar);
-  
+  delay(100);
   #ifndef DEBUG
     retour = !client.publish("zbos/motion/animation/run", commandeChar);
   #else
@@ -436,7 +436,7 @@ bool NAO_sitRelax()
   return retour;
 }
 
-bool NAO_LyingBelly()
+bool NAO_lyingBelly()
 {
   bool retour = false;
   String commande = "test";
@@ -447,9 +447,78 @@ bool NAO_LyingBelly()
   commande.toCharArray(commandeChar,(commande.length()+1));
   Serial.print("Sending : ");
   Serial.println(commandeChar);
-  
+  delay(100);
   #ifndef DEBUG
     retour = !client.publish("zbos/motion/animation/run", commandeChar);
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
+
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+  return retour;
+}
+
+bool NAO_monster()
+{
+  bool retour = false;
+  String commande = "test";
+  char commandeChar[100] = "Not empty xD";
+
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+  commande = (String)"{\"type\":\"stand\",\"animationId\":\"animations/Stand/Waiting/Monster_1\"}";
+  commande.toCharArray(commandeChar,(commande.length()+1));
+  Serial.print("Sending : ");
+  Serial.println(commandeChar);
+  delay(100);
+  #ifndef DEBUG
+    retour = !client.publish("zbos/motion/animation/run", commandeChar);
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
+
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+  return retour;
+}
+
+bool NAO_pong()
+{
+  bool retour = false;
+  String commande = "test";
+  char commandeChar[100] = "Not empty xD";
+
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+  commande = (String)"{\"type\":\"sit\",\"animationId\":\"animations/Sit/Waiting/Pong_1\"}";
+  commande.toCharArray(commandeChar,(commande.length()+1));
+  Serial.print("Sending : ");
+  Serial.println(commandeChar);
+  delay(100);
+  #ifndef DEBUG
+    retour = !client.publish("zbos/motion/animation/run", commandeChar);
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
+
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+  return retour;
+}
+
+bool NAO_talk(String message, int volume)
+{
+  bool retour = false;
+  String commande = "test";
+  char commandeChar[100] = "Not empty xD";
+
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+  commande = (String)"{\"gesticulation\":true,\"language\":\"en-US\",\"message\":\"" + message + "\",\"pitch\":100,\"speed\":100,\"volume\":" + volume + "}";
+  commande.toCharArray(commandeChar,(commande.length()+1));
+  Serial.print("Sending : ");
+  Serial.println(commandeChar);
+  delay(500);
+  #ifndef DEBUG
+    retour = !client.publish("zbos/dialog/set", commandeChar);
   #else
     retour = false;
     Serial.println("Running in debug mode! \t Nothing was sent!");
