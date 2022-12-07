@@ -5,24 +5,21 @@
 #include "LumiereRGB.h"
 
 // Debugging option
-#define DEBUG 1 // Uncomment to enable debugging, Comment to disable debugging
-
-// DEL stuff idk
-#define INTERVAL 500
+//#define DEBUG 1 // Uncomment to enable debugging, Comment to disable debugging
 
 // Joystick's stuff
 #define CS_3202_0 15
 #define CS_3202_1 2
 
-const int deathZone_0 = 35;
-const int deathZone_1 = 35;
+const int deathZone_0 = 5;
+const int deathZone_1 = 5;
 
 // WiFi
-const char *ssid = "BELL802"; // Enter your WiFi name
-const char *password = "Toi-memelala";  // Enter WiFi password
+const char *ssid = "tge_sansfil_270"; // Enter your WiFi name
+const char *password = "sherbrooke";  // Enter WiFi password
 
 // MQTT Broker
-const char *mqtt_broker = "10.240.8.168";
+const char *mqtt_broker = "10.240.8.162";
 const char *topic = "zbos/dialog/set";
 const char *mqtt_username = "emqx";
 const char *mqtt_password = "public";
@@ -39,9 +36,17 @@ PubSubClient client(espClient);
     
 void setup()
 {
+  
   Serial.begin(115200);
+  
+  // For the DELS
   FastLED.setBrightness(  BRIGHTNESS );
   FastLED.addLeds<WS2812B, DATA_PIN>(leds, NUM_LEDS);  // GRB ordering is assumed 
+
+  // For the buttons
+  pinMode(4,INPUT);
+  pinMode(5,INPUT);
+  
   // Config SPI
   Serial.println("\nConfiguring SPI..");
   pinMode(CS_3202_0, OUTPUT);
@@ -103,14 +108,14 @@ void loop()
   {
     move = Serial.read();
 
-    distance0 = mesureForce(0);
-    distance1 = mesureForce(1);
-    angle0 = mesureAngle(0);
+    distance0 = mesureForce(1);
+    distance1 = mesureForce(0);
+    angle0 = mesureAngle(1);
 
     if(distance0 > deathZone_0)
     {
       Serial.println("Walking...");
-      if(walkNAO(angle0, distance0))
+      if(NAO_walk(angle0, distance0))
         Serial.println("Error 420, cannot walk");
       else
         walking = true;
@@ -119,7 +124,7 @@ void loop()
     else if (walking)
     {
       Serial.println("Stopping...");
-      if(walkNAO(angle0, 0))
+      if(NAO_walk(angle0, 0))
         Serial.println("Error 69, cannot stop");
       else
         walking = false;
@@ -129,7 +134,7 @@ void loop()
     if(distance1 > deathZone_1)
     {
       Serial.println("Moving head...");
-      moveHeadNAO(mesurePitch(1), mesureYaw(1));
+      NAO_moveHead(mesureYaw(0),mesurePitch(0));
       // Serial.printf("Yaw : %d\n",mesureYaw(1));
       // Serial.printf("Pitch : %d\n",mesurePitch(1));
     }
@@ -182,6 +187,10 @@ void loop()
       break;
     }
     delay(10);
+    if(digitalRead(5))
+      buttonA(i);
+    if(digitalRead(4))
+      buttonB(i);
     delXD(i);
     i++;
   }
@@ -253,17 +262,17 @@ float mesureAngle(int choice)
 
   if(choice == 0)
   {
-    joystick_x = Read3202(0, CS_3202_0);
-    joystick_y = Read3202(1, CS_3202_0);
+    joystick_x = Read3202(1, CS_3202_0);
+    joystick_y = Read3202(0, CS_3202_0);
   }
   else if(choice == 1)
   {
-    joystick_x = Read3202(0, CS_3202_1);
-    joystick_y = Read3202(1, CS_3202_1);
+    joystick_x = Read3202(1, CS_3202_1);
+    joystick_y = Read3202(0, CS_3202_1);
   }
   
-  joystick_x = joystick_x - 2048;
-  joystick_y = joystick_y - 2048;
+  joystick_x = (joystick_x - 2048) ;
+  joystick_y = (joystick_y - 2048) * -1;
 
   angle = (atan2(joystick_y, joystick_x) * 180 / PI) + 180;
 
@@ -285,6 +294,7 @@ int mesureYaw(int choice)
   
   joystick_x = (joystick_x / 21)-100;
 
+  
   return joystick_x;
 }
 
@@ -303,10 +313,13 @@ int mesurePitch(int choice)
   
   joystick_y = (joystick_y / 21)-100;
 
+  joystick_y = joystick_y * -1; // Invert the axis
+
   return joystick_y;
 }
 
-bool walkNAO(int angle, int force)
+#pragma region NAO action
+bool NAO_walk(int angle, int force)
 {
   bool retour = false;
   String commande = "test";
@@ -330,7 +343,7 @@ bool walkNAO(int angle, int force)
   return retour;
 }
 
-bool moveHeadNAO(int pitch, int yaw)
+bool NAO_moveHead(int pitch, int yaw)
 {
   bool retour = false;
   String commande = "test";
@@ -353,3 +366,96 @@ bool moveHeadNAO(int pitch, int yaw)
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
   return retour;
 }
+
+bool NAO_crouch()
+{
+  bool retour = false;
+  String commande = "test";
+  char commandeChar[100] = "Not empty xD";
+
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+  commande = (String)"{\"type\":\"Posture\",\"animationId\":\"Crouch\"}";
+  commande.toCharArray(commandeChar,(commande.length()+1));
+  Serial.print("Sending : ");
+  Serial.println(commandeChar);
+  
+  #ifndef DEBUG
+    retour = !client.publish("zbos/motion/animation/run", commandeChar);
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
+
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+  return retour;
+}
+
+bool NAO_sit()
+{
+  bool retour = false;
+  String commande = "test";
+  char commandeChar[100] = "Not empty xD";
+
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+  commande = (String)"{\"type\":\"Posture\",\"animationId\":\"Sit\"}";
+  commande.toCharArray(commandeChar,(commande.length()+1));
+  Serial.print("Sending : ");
+  Serial.println(commandeChar);
+  
+  #ifndef DEBUG
+    retour = !client.publish("zbos/motion/animation/run", commandeChar);
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
+
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+  return retour;
+}
+
+bool NAO_sitRelax()
+{
+  bool retour = false;
+  String commande = "test";
+  char commandeChar[100] = "Not empty xD";
+
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+  commande = (String)"{\"type\":\"Posture\",\"animationId\":\"SitRelax\"}";
+  commande.toCharArray(commandeChar,(commande.length()+1));
+  Serial.print("Sending : ");
+  Serial.println(commandeChar);
+  
+  #ifndef DEBUG
+    retour = !client.publish("zbos/motion/animation/run", commandeChar);
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
+
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+  return retour;
+}
+
+bool NAO_LyingBelly()
+{
+  bool retour = false;
+  String commande = "test";
+  char commandeChar[100] = "Not empty xD";
+
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
+  commande = (String)"{\"type\":\"Posture\",\"animationId\":\"LyingBelly\"}";
+  commande.toCharArray(commandeChar,(commande.length()+1));
+  Serial.print("Sending : ");
+  Serial.println(commandeChar);
+  
+  #ifndef DEBUG
+    retour = !client.publish("zbos/motion/animation/run", commandeChar);
+  #else
+    retour = false;
+    Serial.println("Running in debug mode! \t Nothing was sent!");
+  #endif
+
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+  return retour;
+}
+#pragma endregion
