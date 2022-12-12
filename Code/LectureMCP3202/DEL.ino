@@ -1,4 +1,12 @@
 /*
+@file   DEL.ino
+@author Mohammad Barin Wahidi, Jessy-Grimard Maheu, 
+        Marc-Étienne Gendron-Fontaine et Zachary Poulin
+@date   12 décembre 2022
+@brief  Programme qui permet d'appeler les fonctions de DEL, changer les couleurs
+        des DEL et choisir les fonctionnalités des boutons de la manette (fonctions
+        pour contrôler le robot ou les DEL).
+
   ============================================
   == Fonctions pour contrôler les DELs      ==
   ============================================
