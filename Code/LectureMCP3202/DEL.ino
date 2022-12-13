@@ -88,7 +88,7 @@ void blinkz()
   }
 }
 
-// fonction bizarre de Marc-Étienne
+// fonction bizarre de Jessy (?)
 void flash()
 {
   Time = millis();  // variable pour compter le temps écoulé en ms
@@ -120,15 +120,34 @@ void flash()
   }
 }
 
-// fonction malfonctionnelle de Marc-Étienne
+/*
+ * brief :  Fonction qui fait allumer, en premier, les DEL
+ *          2 et 4 tendis que les DEL 1 et 3 sont éteinte.
+ *          Puis, après un delay de temps X, les DEL 2 et
+ *          4 s'éteignent et les DEL 1 et 3 s'allume. Les
+ *          couleur des DEL peuvent varier.
+ * param :  RIEN!
+ */
 void charniere()
 {
-    Time = millis();  // variable pour compter le temps écoulé en ms
-    if(Time - oldTime >= INTERVAL)  // si l'intervalle s'est écoulé
+    // Garde le temps depuis le
+    // départ du programme.
+    Time = millis();
+
+    // Quand le delay est passé
+    if(Time - oldTime >= INTERVAL)
     {
+        // Si "ledState" est à l'état "LOW",
+        // les DEL 2 et 4 s'allume tandisque
+        // les DEL 1 et 3 sont éteinte. Sinon,
+        // les DEL 2 et 4 sont éteinte et les
+        // DEL 1 et 3 sont allumées. "ledState"
+        // varrie de "HIGH" à "LOW". Ce qui
+        // donne un effet de clignotement des
+        // DEL paires et impaires.
         if(ledState == LOW)
         {
-            for(int i=0; i<3; i++)
+            for(int i=0; i<NUM_LEDS; i++)
             {
                 for(int j=0; j<NUM_LEDS; j++)
                 {
@@ -136,27 +155,27 @@ void charniere()
                         leds[j] = couleur[i];
                     else                  
                         leds[j] = CRGB::Black; 
-                    FastLED.show(); // montre les couleurs sur les DEL
-                    ledState = HIGH;  // met ledState à HIGH
+                    FastLED.show();
+                    ledState = HIGH;
                 }
             }
         }
         else
         {
-            for(int i=0; i<3; i++)
+            for(int i=0; i<NUM_LEDS; i++)
             {
-                for(int j=0; j<NUM_LEDS; j++) // boucle à travers les DEL
+                for(int j=0; j<NUM_LEDS; j++)
                 {
                     if(j%2==0)
-                        leds[j] = couleur[i];                    
+                        leds[j] = CRGB::Black;                    
                     else
-                        leds[j] = CRGB::Black;
-                    FastLED.show(); // montre les couleurs sur les DEL
-                    ledState = HIGH;  // met ledState à HIGH
+                        leds[j] = couleur[i];
+                    FastLED.show();
+                    ledState = HIGH;
                 }
             }
         }
-        oldTime = Time; // le temps actuel devient l'ancien temps pour la prochaine fois
+        oldTime = Time;
     }
 }
 
