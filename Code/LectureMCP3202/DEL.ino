@@ -88,7 +88,7 @@ void blinkz()
   }
 }
 
-// fonction bizarre de Jessy (?)
+// fonction pour faire clignoter les DEL en groupe de 2 (pair, impair)
 void flash()
 {
   Time = millis();  // variable pour compter le temps écoulé en ms
@@ -98,19 +98,19 @@ void flash()
     {
         for(int i=0; i<NUM_LEDS; i++) // boucle à travers les DEL
         {
-            if(i%2==0)
+            if(i%2==0)  // allume les DEL paires
                 leds[i] = couleur[i];
-            else
+            else        // éteint les DEL impaires
                 leds[i] = CRGB::Black;FastLED.setBrightness(  BRIGHTNESS );
         }
     }
-    else
+    else        // si ledState est à HIGH
     {
         for(int i=0; i<NUM_LEDS; i++) // boucle à travers les DEL
         {
-            if(i%2==0)
+            if(i%2==0)  // éteint les DEL paires
                 leds[i] = CRGB::Black;
-            else
+            else        // allume les DEL impaires
                 leds[i] = couleur[i];
             FastLED.show(); // montre la couleur sur la DEL
             ledState = LOW; // met ledState à LOW
