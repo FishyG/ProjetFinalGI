@@ -14,7 +14,7 @@
   flash();              Fait flasher les DELS
   charniere();          Tentative de quelque chose d'indéfini ¯\_(ツ)_/¯
   barin();              Fait tourner les DELs
-  jgmDashDEL(compteur); Dels arc-en-ciel 😎
+  jgmDashDEL(compteur); Dels arc-en-ciel 😎 (la plus cool)
 
   == Fonctions pour contrôler le robot NAO  ==
   NAO_crouch();           NAO s'accroupit
@@ -27,7 +27,7 @@
 */
 
 
-
+// Fonction pour gèrer les DELs, elle est appelé à environ chaque 10 ms
 void delXD(int compteur)
 {
   //Changer la couleur ici
@@ -60,7 +60,7 @@ void buttonB(int compteur)
   // NAO_crouch();
 }
 
-// fonction pour faire clignoter les DEL
+// fonction pour faire clignoter les DEL (fait par ZACHARY)
 void blinkz()
 {
   Time = millis();  // variable pour compter le temps écoulé en ms
@@ -127,6 +127,7 @@ void flash()
  *          4 s'éteignent et les DEL 1 et 3 s'allume. Les
  *          couleur des DEL peuvent varier.
  * param :  RIEN!
+ (fait par MARC-ÉTIENNE)
  */
 void charniere()
 {
@@ -179,7 +180,7 @@ void charniere()
     }
 }
 
-// fonction pour faire tourner les DEL
+// fonction pour faire tourner les DEL (fait par BARIN)
 void barin()
 {
   Time = millis();  // variable pour compter le temps écoulé en ms
@@ -208,7 +209,7 @@ void barin()
   }
 }
 
-// fonction pour allumer les DEL avec les couleurs de l'arc-en-ciel
+// fonction pour allumer les DEL avec les couleurs de l'arc-en-ciel (fait par JESSY)
 void jgmDashDEL(int compteur)
 {
   for( int i = 0; i < NUM_LEDS; ++i) // boucle à travers les DEL
